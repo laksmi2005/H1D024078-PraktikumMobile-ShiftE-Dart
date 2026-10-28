@@ -28,3 +28,29 @@
 
 **Kesimpulan Praktikum:**  
 Pada pertemuan pertama, konfigurasi lingkungan pengembangan Flutter serta pemahaman dasar bahasa pemrograman Dart menjadi fondasi utama sebelum masuk ke pembuatan antarmuka aplikasi. Dengan menguasai tipe data, struktur kontrol, fungsi, OOP, penanganan eksepsi, dan pemrograman asinkronus (`async`/`await`), mahasiswa siap membangun aplikasi Flutter yang terstruktur pada pertemuan-pertemuan berikutnya.
+
+---
+
+## 📝 Tugas Pertemuan 2
+**Hari, Tanggal**: Rabu, 28 Oktober 2026  
+**Materi**: Pengenalan Framework Flutter, Widget Dasar & Desain UI ([lib/](lib/))
+
+| List Data Produk | Form Produk |
+| :---: | :---: |
+| ![List Data Produk](docs/tugas-2a.png) | ![Form Produk](docs/tugas-2b.png) |
+
+### Penjelasan Teknis
+1. **Inisialisasi & Struktur Project Flutter:**
+   - Membuat project Flutter `tokokita` dengan struktur standar (`android/`, `ios/`, `lib/`, `test/`, dan `pubspec.yaml` untuk manajemen dependensi).
+2. **StatelessWidget vs StatefulWidget:**
+   - Menerapkan `StatelessWidget` untuk komponen statis (`HelloWorld`, `ColumnWidget`, `RowWidget`, dan `ProdukDetail`).
+   - Menerapkan `StatefulWidget` untuk komponen interaktif yang menyimpan state (`ProdukForm` dengan `TextEditingController` dan `ProdukPage`).
+3. **Tata Letak, Form, & ListView:**
+   - Mengatur tata letak vertikal (`Column`) dan horizontal (`Row`), membuat form input produk (`TextField`, `ElevatedButton`), mengirim data ke halaman detail melalui `Navigator.push` + `MaterialPageRoute`, serta menampilkan daftar produk menggunakan `ListView`, `Card`, dan `ListTile`.
+
+### Penjelasan Non Teknis
+1. **Pemisahan File & Keterbacaan Kode:** Memisahkan widget dan halaman ke dalam file terpisah di folder `lib/` serta subfolder `lib/ui/` agar kode lebih modular dan mudah dipelihara.
+2. **Pengalaman Pengguna Awal:** Menyusun antarmuka Material Design dasar (`Scaffold`, `AppBar`, `Card`) sebagai kerangka awal aplikasi toko.
+
+**Kesimpulan Praktikum:**  
+Pada pertemuan kedua, praktikum membahas pembuatan project Flutter serta penyusunan antarmuka dasar menggunakan berbagai widget Material Design (`Scaffold`, `AppBar`, `Column`, `Row`, `TextField`, `ElevatedButton`, `ListView`, `Card`, dan `ListTile`), serta perpindahan halaman sederhana dengan `Navigator.push`.
