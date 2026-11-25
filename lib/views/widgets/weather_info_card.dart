@@ -25,30 +25,11 @@ class WeatherInfoGrid extends StatelessWidget {
   });
 
   String _getInsightTip() {
-    if (weatherCode >= 95) {
-      return '⚡ Badai petir diprediksi. Hindari tempat terbuka!';
-    } else if (weatherCode >= 51 || precipitationProbability >= 70) {
-      return '☔ Peluang hujan tinggi. Siapkan payung hari ini.';
-    } else if (currentTemperature >= 33) {
-      return '☀️ Cuaca terik. Jaga cairan dan pakai tabir surya.';
-    } else if (windSpeed >= 25) {
-      return '💨 Angin cukup kencang. Hati-hati saat berkendara.';
-    } else {
-      return '🌤️ Cuaca nyaman untuk aktivitas luar ruangan hari ini.';
-    }
-  }
-
-  String _getHumidityStatus(int h) {
-    if (h < 40) return 'Kering';
-    if (h <= 70) return 'Nyaman';
-    return 'Lembap';
-  }
-
-  String _getWindStatus(double s) {
-    if (s < 5) return 'Tenang';
-    if (s < 20) return 'Sepoi-sepoi';
-    if (s < 40) return 'Sedang';
-    return 'Kencang';
+    if (weatherCode >= 95) return '⚡ Badai petir diprediksi. Hindari tempat terbuka!';
+    if (weatherCode >= 51 || precipitationProbability >= 70) return '☔ Peluang hujan tinggi. Siapkan payung hari ini.';
+    if (currentTemperature >= 33) return '☀️ Cuaca terik. Jaga cairan tubuh dan pakai tabir surya.';
+    if (windSpeed >= 25) return '💨 Angin cukup kencang. Hati-hati saat berkendara.';
+    return '🌤️ Cuaca nyaman untuk aktivitas luar ruangan hari ini.';
   }
 
   @override
@@ -60,10 +41,8 @@ class WeatherInfoGrid extends StatelessWidget {
     final tempDiffStr = tempDiff.abs() < 0.5
         ? 'Sama dengan suhu riil'
         : (tempDiff > 0
-            ? 'Terasa ${tempDiff.toStringAsFixed(1)}° lebih hangat'
-            : 'Terasa ${tempDiff.abs().toStringAsFixed(1)}° lebih sejuk');
-
-    final metricsBg = isDark ? const Color(0xFF1E293B) : Colors.white;
+            ? '${tempDiff.toStringAsFixed(1)}°C lebih hangat'
+            : '${tempDiff.abs().toStringAsFixed(1)}°C lebih sejuk');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,83 +64,102 @@ class WeatherInfoGrid extends StatelessWidget {
             _getInsightTip(),
             style: theme.textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
-              color: isDark ? Colors.white : const Color(0xFF1E293B),
               height: 1.4,
             ),
           ),
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
 
-        Text(
-          'Detail Cuaca Hari Ini',
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        // Section header
+        Row(
+          children: [
+            const Icon(Icons.dashboard_rounded, size: 20, color: Color(0xFF0288D1)),
+            const SizedBox(width: 8),
+            Text(
+              'Parameter Cuaca Lengkap',
+              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
 
         const SizedBox(height: 10),
 
-        // 2x3 Grid
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.6,
+        // 3-column grid
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _MetricTile(
-              icon: Icons.thermostat_rounded,
-              label: 'Terasa Seperti',
-              value: '${apparentTemperature.toStringAsFixed(1)}°C',
-              sub: tempDiffStr,
-              accentColor: const Color(0xFFF97316),
-              bgColor: metricsBg,
-              isDark: isDark,
+            Expanded(
+              child: _MetricTile(
+                icon: Icons.thermostat_rounded,
+                label: 'Terasa Seperti',
+                value: '${apparentTemperature.toStringAsFixed(1)}°C',
+                sub: tempDiffStr,
+                accentColor: const Color(0xFFF97316),
+                isDark: isDark,
+              ),
             ),
-            _MetricTile(
-              icon: Icons.water_drop_rounded,
-              label: 'Kelembapan',
-              value: '$relativeHumidity%',
-              sub: _getHumidityStatus(relativeHumidity),
-              accentColor: const Color(0xFF38BDF8),
-              bgColor: metricsBg,
-              isDark: isDark,
+            const SizedBox(width: 8),
+            Expanded(
+              child: _MetricTile(
+                icon: Icons.water_drop_rounded,
+                label: 'Kelembapan',
+                value: '$relativeHumidity%',
+                sub: relativeHumidity < 40 ? 'Kering' : (relativeHumidity <= 70 ? 'Nyaman' : 'Lembap Tinggi'),
+                accentColor: const Color(0xFF38BDF8),
+                isDark: isDark,
+              ),
             ),
-            _MetricTile(
-              icon: Icons.air_rounded,
-              label: 'Kecepatan Angin',
-              value: '${windSpeed.toStringAsFixed(1)} km/j',
-              sub: _getWindStatus(windSpeed),
-              accentColor: const Color(0xFF2DD4BF),
-              bgColor: metricsBg,
-              isDark: isDark,
+            const SizedBox(width: 8),
+            Expanded(
+              child: _MetricTile(
+                icon: Icons.air_rounded,
+                label: 'Kecepatan Angin',
+                value: '${windSpeed.toStringAsFixed(1)} km/j',
+                sub: windSpeed < 5 ? 'Tenang' : (windSpeed < 20 ? 'Sepoi-sepoi' : 'Sedang'),
+                accentColor: const Color(0xFF2DD4BF),
+                isDark: isDark,
+              ),
             ),
-            _MetricTile(
-              icon: Icons.grain_rounded,
-              label: 'Curah Hujan',
-              value: '${precipitation.toStringAsFixed(1)} mm',
-              sub: 'Peluang $precipitationProbability%',
-              accentColor: const Color(0xFF818CF8),
-              bgColor: metricsBg,
-              isDark: isDark,
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _MetricTile(
+                icon: Icons.grain_rounded,
+                label: 'Curah Hujan',
+                value: '${precipitation.toStringAsFixed(1)} mm',
+                sub: 'Peluang $precipitationProbability%',
+                accentColor: const Color(0xFF818CF8),
+                isDark: isDark,
+              ),
             ),
-            _MetricTile(
-              icon: Icons.arrow_upward_rounded,
-              label: 'Suhu Maks.',
-              value: '${maxTemperature.toStringAsFixed(0)}°C',
-              sub: 'Puncak siang hari',
-              accentColor: const Color(0xFFF43F5E),
-              bgColor: metricsBg,
-              isDark: isDark,
+            const SizedBox(width: 8),
+            Expanded(
+              child: _MetricTile(
+                icon: Icons.arrow_upward_rounded,
+                label: 'Suhu Maksimum',
+                value: '${maxTemperature.toStringAsFixed(1)}°C',
+                sub: 'Puncak siang hari',
+                accentColor: const Color(0xFFF43F5E),
+                isDark: isDark,
+              ),
             ),
-            _MetricTile(
-              icon: Icons.arrow_downward_rounded,
-              label: 'Suhu Min.',
-              value: '${minTemperature.toStringAsFixed(0)}°C',
-              sub: 'Terendah malam ini',
-              accentColor: const Color(0xFF06B6D4),
-              bgColor: metricsBg,
-              isDark: isDark,
+            const SizedBox(width: 8),
+            Expanded(
+              child: _MetricTile(
+                icon: Icons.arrow_downward_rounded,
+                label: 'Suhu Minimum',
+                value: '${minTemperature.toStringAsFixed(1)}°C',
+                sub: 'Suhu terendah malam',
+                accentColor: const Color(0xFF06B6D4),
+                isDark: isDark,
+              ),
             ),
           ],
         ),
@@ -176,7 +174,6 @@ class _MetricTile extends StatelessWidget {
   final String value;
   final String sub;
   final Color accentColor;
-  final Color bgColor;
   final bool isDark;
 
   const _MetricTile({
@@ -185,20 +182,19 @@ class _MetricTile extends StatelessWidget {
     required this.value,
     required this.sub,
     required this.accentColor,
-    required this.bgColor,
     required this.isDark,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(18),
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: accentColor.withValues(alpha: 0.08),
+            color: Color.fromRGBO(0, 0, 0, isDark ? 0.2 : 0.04),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -206,40 +202,36 @@ class _MetricTile extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: accentColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(icon, size: 15, color: accentColor),
-              ),
-              const SizedBox(width: 7),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+          Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: accentColor.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, size: 16, color: accentColor),
           ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey[400] : Colors.grey[600],
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: -0.3),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: -0.3),
           ),
+          const SizedBox(height: 2),
           Text(
             sub,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 9,
               color: isDark ? Colors.grey[500] : Colors.grey[500],
               fontWeight: FontWeight.w500,
             ),

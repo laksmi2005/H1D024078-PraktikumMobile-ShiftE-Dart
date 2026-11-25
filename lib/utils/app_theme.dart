@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static const Color primarySky = Color(0xFF0288D1);
   static const Color accentCyan = Color(0xFF00ACC1);
-  static const Color darkBlue = Color(0xFF0D47A1);
+  static const Color scaffoldLight = Color(0xFFEBF3FC);
+  static const Color scaffoldDark = Color(0xFF0A1628);
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
@@ -14,12 +15,12 @@ class AppTheme {
       secondary: accentCyan,
       surface: Colors.white,
     ),
-    scaffoldBackgroundColor: const Color(0xFFF4F7FB),
+    scaffoldBackgroundColor: scaffoldLight,
     appBarTheme: const AppBarTheme(
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Color(0xFFEBF3FC),
       foregroundColor: Color(0xFF1E293B),
-      centerTitle: true,
+      centerTitle: false,
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -28,10 +29,18 @@ class AppTheme {
     ),
     cardTheme: CardThemeData(
       elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      color: Colors.white,
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: Colors.white,
+      selectedColor: primarySky.withValues(alpha: 0.15),
+      labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: primarySky.withValues(alpha: 0.3)),
       ),
-      color: Colors.white,
+      showCheckmark: false,
     ),
   );
 
@@ -43,12 +52,12 @@ class AppTheme {
       primary: const Color(0xFF38BDF8),
       surface: const Color(0xFF1E293B),
     ),
-    scaffoldBackgroundColor: const Color(0xFF0F172A),
+    scaffoldBackgroundColor: scaffoldDark,
     appBarTheme: const AppBarTheme(
       elevation: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: scaffoldDark,
       foregroundColor: Colors.white,
-      centerTitle: true,
+      centerTitle: false,
       titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -57,9 +66,7 @@ class AppTheme {
     ),
     cardTheme: CardThemeData(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       color: const Color(0xFF1E293B),
     ),
   );

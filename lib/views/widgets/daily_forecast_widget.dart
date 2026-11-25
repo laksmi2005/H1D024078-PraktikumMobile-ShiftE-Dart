@@ -18,11 +18,6 @@ class DailyForecastWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    // Global range for relative bar sizing
-    double globalMin = dailyForecast.map((e) => e.minTemperature).reduce((a, b) => a < b ? a : b);
-    double globalMax = dailyForecast.map((e) => e.maxTemperature).reduce((a, b) => a > b ? a : b);
-    final range = (globalMax - globalMin).clamp(1.0, 50.0);
-
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -30,7 +25,7 @@ class DailyForecastWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+            color: Color.fromRGBO(0, 0, 0, isDark ? 0.2 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -50,10 +45,11 @@ class DailyForecastWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          ListView.builder(
+          ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: dailyForecast.length,
+            separatorBuilder: (ctx, i) => const SizedBox(height: 10),
             itemBuilder: (context, index) {
               final item = dailyForecast[index];
               final condition = WeatherCodeMapper.getInfo(item.weatherCode);
@@ -68,126 +64,89 @@ class DailyForecastWidget extends StatelessWidget {
               }
               final dateFormatted = DateFormat('d MMM', 'id_ID').format(item.date);
 
-              final leftFraction = ((item.minTemperature - globalMin) / range).clamp(0.0, 1.0);
-              final rightFraction = ((item.maxTemperature - globalMin) / range).clamp(0.0, 1.0);
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 7),
-                child: Row(
-                  children: [
-                    // Day & Date
-                    SizedBox(
-                      width: 68,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(dayName,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              )),
-                          Text(dateFormatted,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: isDark ? Colors.grey[500] : Colors.grey[500],
+              return Row(
+                children: [
+                  // Day & Date
+                  SizedBox(
+                    width: 70,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(dayName,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        Text(dateFormatted,
+                            style: TextStyle(
                                 fontSize: 11,
-                              )),
-                        ],
-                      ),
+                                color: isDark ? Colors.grey[500] : Colors.grey[500])),
+                      ],
                     ),
+                  ),
 
-                    // Icon + Rain %
-                    SizedBox(
-                      width: 48,
-                      child: Row(
-                        children: [
-                          Icon(condition.icon, size: 20, color: condition.gradientColors.first),
-                          if (item.maxPrecipitationProbability > 0) ...[
-                            const SizedBox(width: 2),
-                            Text(
-                              '${item.maxPrecipitationProbability}%',
-                              style: const TextStyle(
+                  // Icon + Rain %
+                  SizedBox(
+                    width: 52,
+                    child: Row(
+                      children: [
+                        Icon(condition.icon, size: 20, color: condition.gradientColors.first),
+                        if (item.maxPrecipitationProbability > 0) ...[
+                          const SizedBox(width: 2),
+                          Text(
+                            '${item.maxPrecipitationProbability}%',
+                            style: const TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF38BDF8),
-                              ),
-                            ),
-                          ],
+                                color: Color(0xFF38BDF8)),
+                          ),
                         ],
-                      ),
+                      ],
                     ),
+                  ),
 
-                    // Min Temp
-                    SizedBox(
-                      width: 30,
-                      child: Text(
-                        '${item.minTemperature.toStringAsFixed(0)}°',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
+                  // Min Temp
+                  SizedBox(
+                    width: 28,
+                    child: Text(
+                      '${item.minTemperature.toStringAsFixed(0)}°',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? Colors.grey[400] : Colors.grey[500],
+                          color: isDark ? Colors.grey[400] : Colors.grey[500]),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  // Full-width gradient bar (cyan → yellow → orange → red)
+                  Expanded(
+                    child: Container(
+                      height: 6,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(3),
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFF38BDF8), // cyan
+                            Color(0xFF34D399), // green
+                            Color(0xFFFBBF24), // yellow
+                            Color(0xFFF97316), // orange
+                            Color(0xFFEF4444), // red
+                          ],
                         ),
                       ),
                     ),
+                  ),
 
-                    const SizedBox(width: 8),
+                  const SizedBox(width: 8),
 
-                    // Relative Temp Bar
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final totalW = constraints.maxWidth;
-                          final barLeft = totalW * leftFraction;
-                          final barRight = totalW * rightFraction;
-                          final barW = (barRight - barLeft).clamp(14.0, totalW);
-                          return Stack(
-                            alignment: Alignment.centerLeft,
-                            children: [
-                              // Track
-                              Container(
-                                height: 5,
-                                decoration: BoxDecoration(
-                                  color: isDark
-                                      ? Colors.white.withValues(alpha: 0.08)
-                                      : Colors.grey.withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(3),
-                                ),
-                              ),
-                              // Active bar
-                              Positioned(
-                                left: barLeft,
-                                child: Container(
-                                  height: 5,
-                                  width: barW,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(3),
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        condition.gradientColors.last.withValues(alpha: 0.6),
-                                        condition.gradientColors.first,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
+                  // Max Temp
+                  SizedBox(
+                    width: 28,
+                    child: Text(
+                      '${item.maxTemperature.toStringAsFixed(0)}°',
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                     ),
-
-                    const SizedBox(width: 8),
-
-                    // Max Temp
-                    SizedBox(
-                      width: 30,
-                      child: Text(
-                        '${item.maxTemperature.toStringAsFixed(0)}°',
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               );
             },
           ),

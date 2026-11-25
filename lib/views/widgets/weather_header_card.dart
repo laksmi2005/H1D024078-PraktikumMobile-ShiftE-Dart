@@ -21,6 +21,15 @@ class WeatherHeaderCard extends StatelessWidget {
     required this.onSearchTap,
   });
 
+  IconData _getCloudIcon(int code) {
+    if (code == 0 || code == 1) return Icons.wb_sunny_rounded;
+    if (code == 2) return Icons.cloud_queue_rounded;
+    if (code >= 95) return Icons.flash_on_rounded;
+    if (code >= 61) return Icons.beach_access_rounded;
+    if (code >= 51) return Icons.grain_rounded;
+    return Icons.cloud_rounded;
+  }
+
   @override
   Widget build(BuildContext context) {
     final condition = WeatherCodeMapper.getInfo(current.weatherCode);
@@ -28,203 +37,144 @@ class WeatherHeaderCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
-        gradient: LinearGradient(
+        borderRadius: BorderRadius.circular(24),
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: condition.gradientColors,
+          colors: [Color(0xFF5BB8F5), Color(0xFF87CEEB)],
         ),
         boxShadow: [
           BoxShadow(
-            color: condition.gradientColors.first.withValues(alpha: 0.4),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: Color.fromRGBO(91, 184, 245, 0.35),
+            blurRadius: 20,
+            offset: Offset(0, 8),
           ),
         ],
       ),
       child: Stack(
         children: [
-          // Background ambient icon
           Positioned(
-            right: -20,
-            bottom: -20,
-            child: Opacity(
-              opacity: 0.15,
+            right: -10,
+            bottom: 0,
+            top: 0,
+            child: Align(
+              alignment: Alignment.centerRight,
               child: Icon(
-                condition.icon,
-                size: 200,
-                color: Colors.white,
+                _getCloudIcon(current.weatherCode),
+                size: 130,
+                color: Color.fromRGBO(255, 255, 255, 0.85),
               ),
             ),
           ),
-
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 22),
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top row: Location selector & Favorite button
                 Row(
                   children: [
                     Expanded(
-                      child: InkWell(
+                      child: GestureDetector(
                         onTap: onSearchTap,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.location_on_rounded,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                              const SizedBox(width: 6),
-                              Flexible(
-                                child: Text(
-                                  location.name,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    letterSpacing: 0.3,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.location_on_rounded, color: Colors.white, size: 20),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                location.name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(width: 4),
-                              const Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                                color: Colors.white70,
-                                size: 20,
-                              ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white70, size: 20),
+                          ],
                         ),
                       ),
                     ),
                     IconButton(
                       onPressed: onToggleFavorite,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
                       icon: Icon(
                         isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                         color: isFavorite ? Colors.redAccent : Colors.white,
-                        size: 26,
+                        size: 24,
                       ),
-                      tooltip: isFavorite ? 'Hapus dari Favorit' : 'Tambah ke Favorit',
                     ),
                   ],
                 ),
-
                 if (location.admin1 != null || location.country != null)
                   Padding(
-                    padding: const EdgeInsets.only(left: 30, bottom: 8),
+                    padding: const EdgeInsets.only(left: 24, top: 2, bottom: 4),
                     child: Text(
                       [
-                        if (location.admin1 != null && location.admin1!.isNotEmpty && location.admin1 != location.name)
+                        if (location.admin1 != null &&
+                            location.admin1!.isNotEmpty &&
+                            location.admin1 != location.name)
                           location.admin1,
                         if (location.country != null) location.country,
                       ].join(', '),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.white70,
-                      ),
+                      style: const TextStyle(fontSize: 13, color: Colors.white70),
                     ),
                   ),
-
-                const SizedBox(height: 12),
-
-                // Temperature and Weather Icon
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${current.temperature.toStringAsFixed(0)}°',
-                          style: const TextStyle(
-                            fontSize: 68,
-                            fontWeight: FontWeight.w300,
-                            color: Colors.white,
-                            height: 1.0,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            condition.description,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        condition.icon,
-                        size: 64,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+                const SizedBox(height: 10),
+                Text(
+                  '${current.temperature.toStringAsFixed(0)}°',
+                  style: const TextStyle(
+                    fontSize: 72,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white,
+                    height: 1.0,
+                  ),
                 ),
-
-                const SizedBox(height: 16),
-                const Divider(color: Colors.white24, height: 1),
-                const SizedBox(height: 12),
-
-                // Bottom summary banner inside header card
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(255, 255, 255, 0.25),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    condition.description,
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Container(height: 0.5, color: Color.fromRGBO(255, 255, 255, 0.3)),
+                const SizedBox(height: 10),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.arrow_upward_rounded, size: 16, color: Colors.white70),
-                        Text(
-                          todayDaily != null ? '${todayDaily!.maxTemperature.toStringAsFixed(0)}°' : '--',
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.arrow_downward_rounded, size: 16, color: Colors.white70),
-                        Text(
-                          todayDaily != null ? '${todayDaily!.minTemperature.toStringAsFixed(0)}°' : '--',
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                    const Icon(Icons.arrow_upward_rounded, size: 15, color: Colors.white70),
+                    Text(
+                      ' ${todayDaily?.maxTemperature.toStringAsFixed(0) ?? '--'}°',
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),
                     ),
-                    Row(
-                      children: [
-                        if (todayDaily != null) ...[
-                          const Icon(Icons.water_drop_rounded, size: 14, color: Colors.white70),
-                          const SizedBox(width: 2),
-                          Text(
-                            '${todayDaily!.maxPrecipitationProbability}%',
-                            style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                        const Icon(Icons.air_rounded, size: 14, color: Colors.white70),
-                        const SizedBox(width: 2),
-                        Text(
-                          '${current.windSpeed.toStringAsFixed(0)} km/j',
-                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
-                        ),
-                      ],
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_downward_rounded, size: 15, color: Colors.white70),
+                    Text(
+                      ' ${todayDaily?.minTemperature.toStringAsFixed(0) ?? '--'}°',
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                    const Spacer(),
+                    if (todayDaily != null && todayDaily!.maxPrecipitationProbability > 0) ...[
+                      const Icon(Icons.water_drop_rounded, size: 14, color: Colors.white70),
+                      Text(
+                        ' ${todayDaily!.maxPrecipitationProbability}%',
+                        style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+                    const Icon(Icons.air_rounded, size: 14, color: Colors.white70),
+                    Text(
+                      ' ${current.windSpeed.toStringAsFixed(0)} km/j',
+                      style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
