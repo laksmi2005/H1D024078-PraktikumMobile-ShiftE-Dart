@@ -18,23 +18,19 @@ class DailyForecastWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    // Calculate global min and max for temperature range bar
-    double globalMin = dailyForecast.first.minTemperature;
-    double globalMax = dailyForecast.first.maxTemperature;
-    for (final item in dailyForecast) {
-      if (item.minTemperature < globalMin) globalMin = item.minTemperature;
-      if (item.maxTemperature > globalMax) globalMax = item.maxTemperature;
-    }
+    // Global range for relative bar sizing
+    double globalMin = dailyForecast.map((e) => e.minTemperature).reduce((a, b) => a < b ? a : b);
+    double globalMax = dailyForecast.map((e) => e.maxTemperature).reduce((a, b) => a > b ? a : b);
     final range = (globalMax - globalMin).clamp(1.0, 50.0);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withValues(alpha: 0.06) : Colors.white,
+        color: isDark ? const Color(0xFF1E293B) : Colors.white,
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -45,162 +41,149 @@ class DailyForecastWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.calendar_month_rounded,
-                size: 20,
-                color: theme.colorScheme.primary,
-              ),
+              Icon(Icons.calendar_month_rounded, size: 20, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               Text(
-                'Prakiraan Cuaca 7 Hari ke Depan',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                'Prakiraan 7 Hari ke Depan',
+                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          const Divider(height: 1),
-          const SizedBox(height: 8),
-          ListView.separated(
+          ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: dailyForecast.length,
-            separatorBuilder: (ctx, i) => const Divider(height: 16, thickness: 0.5),
             itemBuilder: (context, index) {
               final item = dailyForecast[index];
               final condition = WeatherCodeMapper.getInfo(item.weatherCode);
 
-              // Date formatting
               String dayName;
               if (index == 0) {
                 dayName = 'Hari Ini';
               } else if (index == 1) {
                 dayName = 'Besok';
               } else {
-                dayName = DateFormat('EEEE', 'id_ID').format(item.date);
+                dayName = DateFormat('EEE', 'id_ID').format(item.date);
               }
               final dateFormatted = DateFormat('d MMM', 'id_ID').format(item.date);
 
-              // Calculate start and width percentage for temp bar
-              final leftPercent = ((item.minTemperature - globalMin) / range).clamp(0.0, 1.0);
-              final rightPercent = ((item.maxTemperature - globalMin) / range).clamp(0.0, 1.0);
-              final barWidthPercent = (rightPercent - leftPercent).clamp(0.15, 1.0);
+              final leftFraction = ((item.minTemperature - globalMin) / range).clamp(0.0, 1.0);
+              final rightFraction = ((item.maxTemperature - globalMin) / range).clamp(0.0, 1.0);
 
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.symmetric(vertical: 7),
                 child: Row(
                   children: [
                     // Day & Date
                     SizedBox(
-                      width: 80,
+                      width: 68,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            dayName,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                          Text(
-                            dateFormatted,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: isDark ? Colors.grey[400] : Colors.grey[600],
-                              fontSize: 11,
-                            ),
-                          ),
+                          Text(dayName,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              )),
+                          Text(dateFormatted,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: isDark ? Colors.grey[500] : Colors.grey[500],
+                                fontSize: 11,
+                              )),
                         ],
                       ),
                     ),
 
-                    // Condition Icon & Rain badge
+                    // Icon + Rain %
                     SizedBox(
-                      width: 52,
+                      width: 48,
                       child: Row(
                         children: [
-                          Icon(
-                            condition.icon,
-                            color: condition.gradientColors.first,
-                            size: 22,
-                          ),
-                          const SizedBox(width: 4),
-                          if (item.maxPrecipitationProbability > 0)
+                          Icon(condition.icon, size: 20, color: condition.gradientColors.first),
+                          if (item.maxPrecipitationProbability > 0) ...[
+                            const SizedBox(width: 2),
                             Text(
                               '${item.maxPrecipitationProbability}%',
                               style: const TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue,
+                                color: Color(0xFF38BDF8),
                               ),
                             ),
+                          ],
                         ],
                       ),
                     ),
 
                     // Min Temp
                     SizedBox(
-                      width: 28,
+                      width: 30,
                       child: Text(
                         '${item.minTemperature.toStringAsFixed(0)}°',
                         textAlign: TextAlign.right,
                         style: TextStyle(
                           fontSize: 13,
-                          color: isDark ? Colors.grey[400] : Colors.grey[600],
                           fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.grey[400] : Colors.grey[500],
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 8),
 
-                    // Dynamic Temperature Bar (Apple Weather style)
+                    // Relative Temp Bar
                     Expanded(
                       child: LayoutBuilder(
                         builder: (context, constraints) {
-                          final totalWidth = constraints.maxWidth;
-                          final barLeft = totalWidth * leftPercent;
-                          final barWidth = (totalWidth * barWidthPercent).clamp(12.0, totalWidth - barLeft);
-
-                          return Container(
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.06),
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  left: barLeft,
-                                  width: barWidth,
-                                  top: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      gradient: const LinearGradient(
-                                        colors: [Color(0xFF38BDF8), Color(0xFFF59E0B), Color(0xFFEF4444)],
-                                      ),
+                          final totalW = constraints.maxWidth;
+                          final barLeft = totalW * leftFraction;
+                          final barRight = totalW * rightFraction;
+                          final barW = (barRight - barLeft).clamp(14.0, totalW);
+                          return Stack(
+                            alignment: Alignment.centerLeft,
+                            children: [
+                              // Track
+                              Container(
+                                height: 5,
+                                decoration: BoxDecoration(
+                                  color: isDark
+                                      ? Colors.white.withValues(alpha: 0.08)
+                                      : Colors.grey.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                              // Active bar
+                              Positioned(
+                                left: barLeft,
+                                child: Container(
+                                  height: 5,
+                                  width: barW,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(3),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        condition.gradientColors.last.withValues(alpha: 0.6),
+                                        condition.gradientColors.first,
+                                      ],
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           );
                         },
                       ),
                     ),
+
                     const SizedBox(width: 8),
 
                     // Max Temp
                     SizedBox(
-                      width: 28,
+                      width: 30,
                       child: Text(
                         '${item.maxTemperature.toStringAsFixed(0)}°',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
