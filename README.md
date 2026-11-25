@@ -93,9 +93,15 @@ lib/
 
 ## Screenshot Aplikasi
 
+### Light Mode
 | Home Screen | Prakiraan & Detail Cuaca | Search & History Screen |
 | :---: | :---: | :---: |
-| <img src="screenshots/home_screen_1.jpg" width="250" alt="Home Screen" /> | <img src="screenshots/home_screen_2.jpg" width="250" alt="Prakiraan 7 Hari" /> | <img src="screenshots/search_screen.png" width="250" alt="Search Screen" /> |
+| <img src="screenshots/home_light_1.jpg" width="240" alt="Home Screen Light" /> | <img src="screenshots/home_light_2.jpg" width="240" alt="Prakiraan 7 Hari Light" /> | <img src="screenshots/search_light.png" width="240" alt="Search Screen Light" /> |
+
+### Dark Mode
+| Home Screen | Prakiraan & Detail Cuaca | Search & History Screen |
+| :---: | :---: | :---: |
+| <img src="screenshots/home_dark_1.jpg" width="240" alt="Home Screen Dark" /> | <img src="screenshots/home_dark_2.jpg" width="240" alt="Prakiraan 7 Hari Dark" /> | <img src="screenshots/search_dark.jpg" width="240" alt="Search Screen Dark" /> |
 
 ---
 
