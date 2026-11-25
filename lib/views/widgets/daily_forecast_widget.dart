@@ -88,7 +88,6 @@ class DailyForecastWidget extends StatelessWidget {
                     child: Row(
                       children: [
                         Icon(condition.icon, size: 20,
-                            // In dark mode use white so icon is always visible
                             color: isDark
                                 ? Colors.white70
                                 : condition.gradientColors.first),
@@ -99,7 +98,6 @@ class DailyForecastWidget extends StatelessWidget {
                             style: TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                // lighter blue for dark, normal blue for light
                                 color: isDark
                                     ? const Color(0xFF7DD3FC)
                                     : const Color(0xFF38BDF8)),
@@ -124,7 +122,6 @@ class DailyForecastWidget extends StatelessWidget {
 
                   const SizedBox(width: 8),
 
-                  // Minimal 2-tone bar: soft blue → warm orange (calmer look)
                   Expanded(
                     child: Container(
                       height: 4,
@@ -132,9 +129,9 @@ class DailyForecastWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(2),
                         gradient: LinearGradient(
                           colors: [
-                            const Color(0xFF93C5FD), // soft sky blue
-                            const Color(0xFFFBBF24), // soft yellow
-                            Color.fromRGBO(249, 115, 22, 0.85), // soft orange
+                            const Color(0xFF93C5FD),
+                            const Color(0xFFFBBF24),
+                            Color.fromRGBO(249, 115, 22, 0.85),
                           ],
                         ),
                       ),

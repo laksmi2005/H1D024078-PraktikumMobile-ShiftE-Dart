@@ -78,7 +78,6 @@ class WeatherViewModel extends ChangeNotifier {
   Future<void> _loadFavorites() async {
     try {
       final raw = await _storageService.getFavorites();
-      // Filter out any corrupted entries with empty names
       _favorites = raw.where((f) => f.name.trim().isNotEmpty).toList();
       notifyListeners();
     } catch (_) {}
@@ -162,7 +161,7 @@ class WeatherViewModel extends ChangeNotifier {
 
   /// Toggle favorite location
   Future<void> toggleFavorite(LocationModel location) async {
-    if (location.name.trim().isEmpty) return; // Guard: skip empty names
+    if (location.name.trim().isEmpty) return;
     final index = _favorites.indexWhere((f) =>
         f.name.toLowerCase() == location.name.toLowerCase() &&
         (f.latitude - location.latitude).abs() < 0.01 &&

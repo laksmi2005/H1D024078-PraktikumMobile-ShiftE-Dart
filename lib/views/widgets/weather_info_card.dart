@@ -101,7 +101,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Terasa Seperti',
                 value: '${apparentTemperature.toStringAsFixed(1)}°C',
                 sub: tempDiffStr,
-                accentColor: const Color(0xFFD97706), // muted amber
+                accentColor: const Color(0xFFD97706),
                 isDark: isDark,
               ),
             ),
@@ -112,7 +112,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Kelembapan',
                 value: '$relativeHumidity%',
                 sub: relativeHumidity < 40 ? 'Kering' : (relativeHumidity <= 70 ? 'Nyaman' : 'Lembap Tinggi'),
-                accentColor: const Color(0xFF0284C7), // muted sky blue
+                accentColor: const Color(0xFF0284C7),
                 isDark: isDark,
               ),
             ),
@@ -123,7 +123,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Kecepatan Angin',
                 value: '${windSpeed.toStringAsFixed(1)} km/j',
                 sub: windSpeed < 5 ? 'Tenang' : (windSpeed < 20 ? 'Sepoi-sepoi' : 'Sedang'),
-                accentColor: const Color(0xFF0D9488), // muted teal
+                accentColor: const Color(0xFF0D9488),
                 isDark: isDark,
               ),
             ),
@@ -141,7 +141,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Curah Hujan',
                 value: '${precipitation.toStringAsFixed(1)} mm',
                 sub: 'Peluang $precipitationProbability%',
-                accentColor: const Color(0xFF6366F1), // muted indigo
+                accentColor: const Color(0xFF6366F1),
                 isDark: isDark,
               ),
             ),
@@ -152,7 +152,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Suhu Maksimum',
                 value: '${maxTemperature.toStringAsFixed(1)}°C',
                 sub: 'Puncak siang hari',
-                accentColor: const Color(0xFFE11D48), // muted rose
+                accentColor: const Color(0xFFE11D48),
                 isDark: isDark,
               ),
             ),
@@ -163,7 +163,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Suhu Minimum',
                 value: '${minTemperature.toStringAsFixed(1)}°C',
                 sub: 'Suhu terendah malam',
-                accentColor: const Color(0xFF0891B2), // muted cyan
+                accentColor: const Color(0xFF0891B2),
                 isDark: isDark,
               ),
             ),

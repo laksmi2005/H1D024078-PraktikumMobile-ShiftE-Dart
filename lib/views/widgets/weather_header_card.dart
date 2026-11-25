@@ -41,11 +41,11 @@ class WeatherHeaderCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF4A9ECC), Color(0xFF6BB8D4)], // softer, more muted blue
+          colors: [Color(0xFF4A9ECC), Color(0xFF6BB8D4)],
         ),
         boxShadow: [
           BoxShadow(
-            color: Color.fromRGBO(74, 158, 204, 0.25), // less intense shadow
+            color: Color.fromRGBO(74, 158, 204, 0.25),
             blurRadius: 16,
             offset: Offset(0, 6),
           ),
@@ -53,7 +53,6 @@ class WeatherHeaderCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Subtle decorative background circles for depth (not flat)
           Positioned(
             right: -28,
             top: -28,
@@ -146,7 +145,6 @@ class WeatherHeaderCard extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 12),
-                // Temperature + Feels like side info
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -196,7 +194,7 @@ class WeatherHeaderCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 90), // Reserve space for right cloud icon
+                    const SizedBox(width: 90),
                   ],
                 ),
                 const SizedBox(height: 14),

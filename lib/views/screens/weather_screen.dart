@@ -256,21 +256,21 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
                   const SizedBox(height: 16),
 
-                  // Hourly Forecast (24 Hours Carousel)
+                  // Prakiraan per jam
                   HourlyForecastWidget(
                     hourlyForecast: weather.hourlyForecast,
                   ),
 
                   const SizedBox(height: 16),
 
-                  // 7-Day Forecast with Apple Weather-style Temp Range Bar
+                  // Prakiraan 7 hari
                   DailyForecastWidget(
                     dailyForecast: weather.dailyForecast,
                   ),
 
                   const SizedBox(height: 16),
 
-                  // Detailed Weather Parameters & Smart Insight
+                  // Detail parameter cuaca
                   WeatherInfoGrid(
                     currentTemperature: weather.current.temperature,
                     apparentTemperature: weather.current.apparentTemperature,
@@ -285,26 +285,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
                   const SizedBox(height: 24),
 
-                  // Open-Meteo attribution & App branding
                   Center(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Data disediakan secara langsung oleh Open-Meteo REST API',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: isDark ? Colors.grey[500] : Colors.grey[600],
-                            fontSize: 11,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Aire Weather • MVVM Architecture',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: isDark ? Colors.grey[600] : Colors.grey[400],
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      'Sumber data: Open-Meteo API',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: isDark ? Colors.grey[500] : Colors.grey[600],
+                        fontSize: 11,
+                      ),
                     ),
                   ),
 
