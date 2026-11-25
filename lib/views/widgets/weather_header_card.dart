@@ -41,13 +41,13 @@ class WeatherHeaderCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF5BB8F5), Color(0xFF87CEEB)],
+          colors: [Color(0xFF4A9ECC), Color(0xFF6BB8D4)], // softer, more muted blue
         ),
         boxShadow: [
           BoxShadow(
-            color: Color.fromRGBO(91, 184, 245, 0.35),
-            blurRadius: 20,
-            offset: Offset(0, 8),
+            color: Color.fromRGBO(74, 158, 204, 0.25), // less intense shadow
+            blurRadius: 16,
+            offset: Offset(0, 6),
           ),
         ],
       ),

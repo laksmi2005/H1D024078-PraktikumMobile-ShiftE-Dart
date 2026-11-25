@@ -189,30 +189,33 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             showCheckmark: false,
                             avatar: Icon(
                               Icons.favorite_rounded,
-                              size: 15,
-                              color: isSelected ? Colors.white : Colors.redAccent,
+                              size: 14,
+                              color: isSelected
+                                  ? (isDark ? const Color(0xFF7DD3FC) : const Color(0xFF0369A1))
+                                  : (isDark ? Colors.grey[400] : Colors.grey[500]),
                             ),
                             label: Text(
                               fav.name,
                               style: TextStyle(
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                                 fontSize: 13,
-                                // Always explicit color so it's readable in both themes
                                 color: isSelected
-                                    ? Colors.white
-                                    : (isDark ? Colors.grey[200] : Colors.grey[800]),
+                                    ? (isDark ? Colors.white : const Color(0xFF0F172A))
+                                    : (isDark ? Colors.grey[300] : Colors.grey[700]),
                               ),
                             ),
                             selected: isSelected,
-                            selectedColor: Colors.redAccent,
+                            selectedColor: isDark
+                                ? const Color(0xFF1E3A5F)
+                                : const Color(0xFFE0F2FE),
                             backgroundColor: isDark
-                                ? Colors.grey[800]
+                                ? const Color(0xFF1E293B)
                                 : Colors.white,
                             side: BorderSide(
                               color: isSelected
-                                  ? Colors.redAccent
-                                  : (isDark ? Colors.grey[600]! : Colors.grey[300]!),
-                              width: 1.2,
+                                  ? (isDark ? const Color(0xFF38BDF8) : const Color(0xFF7DD3FC))
+                                  : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+                              width: 1,
                             ),
                             onSelected: (selected) {
                               if (selected && !isSelected) {

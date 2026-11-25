@@ -124,19 +124,17 @@ class DailyForecastWidget extends StatelessWidget {
 
                   const SizedBox(width: 8),
 
-                  // Full-width gradient bar (cyan → yellow → orange → red)
+                  // Minimal 2-tone bar: soft blue → warm orange (calmer look)
                   Expanded(
                     child: Container(
-                      height: 6,
+                      height: 4,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(3),
-                        gradient: const LinearGradient(
+                        borderRadius: BorderRadius.circular(2),
+                        gradient: LinearGradient(
                           colors: [
-                            Color(0xFF38BDF8), // cyan
-                            Color(0xFF34D399), // green
-                            Color(0xFFFBBF24), // yellow
-                            Color(0xFFF97316), // orange
-                            Color(0xFFEF4444), // red
+                            const Color(0xFF93C5FD), // soft sky blue
+                            const Color(0xFFFBBF24), // soft yellow
+                            Color.fromRGBO(249, 115, 22, 0.85), // soft orange
                           ],
                         ),
                       ),

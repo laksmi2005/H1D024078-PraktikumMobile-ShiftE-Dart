@@ -53,17 +53,19 @@ class WeatherInfoGrid extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
             color: isDark
-                ? theme.colorScheme.primary.withValues(alpha: 0.15)
-                : theme.colorScheme.primary.withValues(alpha: 0.08),
+                ? const Color(0xFF1E293B)
+                : const Color(0xFFF1F5F9),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: theme.colorScheme.primary.withValues(alpha: 0.2),
+              color: isDark
+                  ? const Color(0xFF334155)
+                  : const Color(0xFFE2E8F0),
             ),
           ),
           child: Text(
             _getInsightTip(),
             style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               height: 1.4,
             ),
           ),
@@ -74,7 +76,11 @@ class WeatherInfoGrid extends StatelessWidget {
         // Section header
         Row(
           children: [
-            const Icon(Icons.dashboard_rounded, size: 20, color: Color(0xFF0288D1)),
+            Icon(
+              Icons.dashboard_rounded,
+              size: 19,
+              color: isDark ? Colors.grey[400] : const Color(0xFF64748B),
+            ),
             const SizedBox(width: 8),
             Text(
               'Parameter Cuaca Lengkap',
@@ -95,7 +101,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Terasa Seperti',
                 value: '${apparentTemperature.toStringAsFixed(1)}°C',
                 sub: tempDiffStr,
-                accentColor: const Color(0xFFF97316),
+                accentColor: const Color(0xFFD97706), // muted amber
                 isDark: isDark,
               ),
             ),
@@ -106,7 +112,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Kelembapan',
                 value: '$relativeHumidity%',
                 sub: relativeHumidity < 40 ? 'Kering' : (relativeHumidity <= 70 ? 'Nyaman' : 'Lembap Tinggi'),
-                accentColor: const Color(0xFF38BDF8),
+                accentColor: const Color(0xFF0284C7), // muted sky blue
                 isDark: isDark,
               ),
             ),
@@ -117,7 +123,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Kecepatan Angin',
                 value: '${windSpeed.toStringAsFixed(1)} km/j',
                 sub: windSpeed < 5 ? 'Tenang' : (windSpeed < 20 ? 'Sepoi-sepoi' : 'Sedang'),
-                accentColor: const Color(0xFF2DD4BF),
+                accentColor: const Color(0xFF0D9488), // muted teal
                 isDark: isDark,
               ),
             ),
@@ -135,7 +141,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Curah Hujan',
                 value: '${precipitation.toStringAsFixed(1)} mm',
                 sub: 'Peluang $precipitationProbability%',
-                accentColor: const Color(0xFF818CF8),
+                accentColor: const Color(0xFF6366F1), // muted indigo
                 isDark: isDark,
               ),
             ),
@@ -146,7 +152,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Suhu Maksimum',
                 value: '${maxTemperature.toStringAsFixed(1)}°C',
                 sub: 'Puncak siang hari',
-                accentColor: const Color(0xFFF43F5E),
+                accentColor: const Color(0xFFE11D48), // muted rose
                 isDark: isDark,
               ),
             ),
@@ -157,7 +163,7 @@ class WeatherInfoGrid extends StatelessWidget {
                 label: 'Suhu Minimum',
                 value: '${minTemperature.toStringAsFixed(1)}°C',
                 sub: 'Suhu terendah malam',
-                accentColor: const Color(0xFF06B6D4),
+                accentColor: const Color(0xFF0891B2), // muted cyan
                 isDark: isDark,
               ),
             ),

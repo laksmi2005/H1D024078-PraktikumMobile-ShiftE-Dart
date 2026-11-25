@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primarySky = Color(0xFF0288D1);
-  static const Color accentCyan = Color(0xFF00ACC1);
-  static const Color scaffoldLight = Color(0xFFEBF3FC);
-  static const Color scaffoldDark = Color(0xFF0A1628);
+  static const Color primarySky = Color(0xFF0284C7);
+  static const Color accentCyan = Color(0xFF0891B2);
+  static const Color scaffoldLight = Color(0xFFF4F7FA);
+  static const Color scaffoldDark = Color(0xFF0F172A);
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
@@ -18,7 +18,7 @@ class AppTheme {
     scaffoldBackgroundColor: scaffoldLight,
     appBarTheme: const AppBarTheme(
       elevation: 0,
-      backgroundColor: Color(0xFFEBF3FC),
+      backgroundColor: Color(0xFFF4F7FA),
       foregroundColor: Color(0xFF1E293B),
       centerTitle: false,
       titleTextStyle: TextStyle(
