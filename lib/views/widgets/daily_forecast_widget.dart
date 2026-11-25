@@ -87,15 +87,22 @@ class DailyForecastWidget extends StatelessWidget {
                     width: 52,
                     child: Row(
                       children: [
-                        Icon(condition.icon, size: 20, color: condition.gradientColors.first),
+                        Icon(condition.icon, size: 20,
+                            // In dark mode use white so icon is always visible
+                            color: isDark
+                                ? Colors.white70
+                                : condition.gradientColors.first),
                         if (item.maxPrecipitationProbability > 0) ...[
                           const SizedBox(width: 2),
                           Text(
                             '${item.maxPrecipitationProbability}%',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 9,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF38BDF8)),
+                                // lighter blue for dark, normal blue for light
+                                color: isDark
+                                    ? const Color(0xFF7DD3FC)
+                                    : const Color(0xFF38BDF8)),
                           ),
                         ],
                       ],
