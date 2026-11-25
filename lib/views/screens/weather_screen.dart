@@ -175,15 +175,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Favorite chips row (quick switcher)
-                  if (vm.favorites.isNotEmpty) ...[
+                  if (vm.favorites.where((f) => f.name.trim().isNotEmpty).isNotEmpty) ...[
                     SizedBox(
                       height: 38,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemCount: vm.favorites.length,
+                        itemCount: vm.favorites.where((f) => f.name.trim().isNotEmpty).length,
                         separatorBuilder: (ctx, i) => const SizedBox(width: 8),
                         itemBuilder: (context, index) {
-                          final fav = vm.favorites[index];
+                          final fav = vm.favorites.where((f) => f.name.trim().isNotEmpty).toList()[index];
                           final isSelected = fav.name.toLowerCase() == location.name.toLowerCase();
                           return ChoiceChip(
                             showCheckmark: false,
