@@ -228,7 +228,22 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: isFav ? Colors.redAccent : Colors.grey,
                           ),
                           tooltip: isFav ? 'Hapus Favorit' : 'Simpan Favorit',
-                          onPressed: () => vm.toggleFavorite(item),
+                          onPressed: () {
+                            final willBeFav = !isFav;
+                            vm.toggleFavorite(item);
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  willBeFav
+                                      ? '${item.name} ditambahkan ke favorit ❤️'
+                                      : '${item.name} dihapus dari favorit',
+                                ),
+                                duration: const Duration(seconds: 2),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          },
                         ),
                         onTap: () => _onSelectLocation(item),
                       ),
@@ -335,7 +350,16 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
               TextButton(
-                onPressed: () => vm.clearHistory(),
+                onPressed: () {
+                  vm.clearHistory();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Riwayat pencarian telah dibersihkan'),
+                      duration: Duration(seconds: 2),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                },
                 child: const Text('Hapus Semua', style: TextStyle(fontSize: 12)),
               ),
             ],

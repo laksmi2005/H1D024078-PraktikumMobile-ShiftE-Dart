@@ -207,22 +207,25 @@ class WeatherHeaderCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (todayDaily != null && todayDaily!.maxPrecipitationProbability > 0)
-                      Row(
-                        children: [
-                          const Icon(Icons.water_drop_outlined, size: 16, color: Colors.white70),
-                          const SizedBox(width: 4),
+                    Row(
+                      children: [
+                        if (todayDaily != null) ...[
+                          const Icon(Icons.water_drop_rounded, size: 14, color: Colors.white70),
+                          const SizedBox(width: 2),
                           Text(
-                            'Peluang Hujan: ${todayDaily!.maxPrecipitationProbability}%',
-                            style: const TextStyle(color: Colors.white, fontSize: 13),
+                            '${todayDaily!.maxPrecipitationProbability}%',
+                            style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
                           ),
+                          const SizedBox(width: 10),
                         ],
-                      )
-                    else
-                      Text(
-                        'Angin: ${current.windSpeed.toStringAsFixed(0)} km/j',
-                        style: const TextStyle(color: Colors.white70, fontSize: 13),
-                      ),
+                        const Icon(Icons.air_rounded, size: 14, color: Colors.white70),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${current.windSpeed.toStringAsFixed(0)} km/j',
+                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],

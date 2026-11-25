@@ -145,11 +145,9 @@ lib/
 
 ## 📸 Screenshot Aplikasi
 
-*(Letakkan screenshot aplikasi di bawah ini sebelum pengumpulan)*
-
-| Home / Weather Screen | Search / Location Screen |
-| :---: | :---: |
-| ![Home Screen](screenshots/home_screen.png) | ![Search Screen](screenshots/search_screen.png) |
+| Home Screen (Atas) | Home Screen (Prakiraan 7 Hari) | Search & History Screen |
+| :---: | :---: | :---: |
+| <img src="screenshots/home_screen_1.jpg" width="260" alt="Home Screen Atas" /> | <img src="screenshots/home_screen_2.jpg" width="260" alt="Home Screen Prakiraan" /> | <img src="screenshots/search_screen.png" width="260" alt="Search Screen" /> |
 
 ---
 

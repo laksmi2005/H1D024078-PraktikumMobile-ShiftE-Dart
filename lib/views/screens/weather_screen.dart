@@ -185,13 +185,17 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           final fav = vm.favorites[index];
                           final isSelected = fav.name.toLowerCase() == location.name.toLowerCase();
                           return ChoiceChip(
-                            label: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.favorite, size: 14, color: Colors.redAccent),
-                                const SizedBox(width: 4),
-                                Text(fav.name),
-                              ],
+                            showCheckmark: false,
+                            avatar: Icon(
+                              Icons.favorite_rounded,
+                              size: 15,
+                              color: isSelected ? Colors.redAccent : Colors.grey[500],
+                            ),
+                            label: Text(
+                              fav.name,
+                              style: TextStyle(
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                              ),
                             ),
                             selected: isSelected,
                             onSelected: (selected) {
@@ -212,7 +216,22 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     current: weather.current,
                     todayDaily: todayDaily,
                     isFavorite: isFav,
-                    onToggleFavorite: () => vm.toggleFavorite(location),
+                    onToggleFavorite: () {
+                      final willBeFavorite = !isFav;
+                      vm.toggleFavorite(location);
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            willBeFavorite
+                                ? '${location.name} ditambahkan ke favorit ❤️'
+                                : '${location.name} dihapus dari favorit',
+                          ),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    },
                     onSearchTap: _openSearchScreen,
                   ),
 
