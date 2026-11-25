@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/weather_viewmodel.dart';
 import '../widgets/daily_forecast_widget.dart';
+import '../widgets/hourly_forecast_widget.dart';
 import '../widgets/weather_header_card.dart';
 import '../widgets/weather_info_card.dart';
 import 'search_screen.dart';
@@ -169,7 +170,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             onRefresh: () => vm.fetchWeather(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -207,7 +208,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
                   ],
 
                   // Hero Header Card
@@ -235,23 +236,33 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     onSearchTap: _openSearchScreen,
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 16),
 
-                  // Detail Metrics Grid
+                  // Hourly Forecast (24 Hours Carousel)
+                  HourlyForecastWidget(
+                    hourlyForecast: weather.hourlyForecast,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // 7-Day Forecast with Apple Weather-style Temp Range Bar
+                  DailyForecastWidget(
+                    dailyForecast: weather.dailyForecast,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Detailed Weather Parameters & Smart Insight
                   WeatherInfoGrid(
+                    currentTemperature: weather.current.temperature,
                     apparentTemperature: weather.current.apparentTemperature,
                     relativeHumidity: weather.current.relativeHumidity,
                     windSpeed: weather.current.windSpeed,
                     precipitation: weather.current.precipitation,
+                    precipitationProbability: todayDaily?.maxPrecipitationProbability ?? 0,
                     maxTemperature: todayDaily?.maxTemperature ?? weather.current.temperature,
                     minTemperature: todayDaily?.minTemperature ?? weather.current.temperature,
-                  ),
-
-                  const SizedBox(height: 18),
-
-                  // 7-day forecast
-                  DailyForecastWidget(
-                    dailyForecast: weather.dailyForecast,
+                    weatherCode: weather.current.weatherCode,
                   ),
 
                   const SizedBox(height: 24),

@@ -30,6 +30,20 @@ class CurrentWeather {
   }
 }
 
+class HourlyForecastItem {
+  final DateTime time;
+  final double temperature;
+  final int weatherCode;
+  final int precipitationProbability;
+
+  HourlyForecastItem({
+    required this.time,
+    required this.temperature,
+    required this.weatherCode,
+    required this.precipitationProbability,
+  });
+}
+
 class DailyForecastItem {
   final DateTime date;
   final int weatherCode;
@@ -51,6 +65,7 @@ class WeatherData {
   final double longitude;
   final String timezone;
   final CurrentWeather current;
+  final List<HourlyForecastItem> hourlyForecast;
   final List<DailyForecastItem> dailyForecast;
 
   WeatherData({
@@ -58,13 +73,44 @@ class WeatherData {
     required this.longitude,
     required this.timezone,
     required this.current,
+    required this.hourlyForecast,
     required this.dailyForecast,
   });
 
   factory WeatherData.fromJson(Map<String, dynamic> json) {
     final currentJson = json['current'] as Map<String, dynamic>? ?? {};
+    final hourlyJson = json['hourly'] as Map<String, dynamic>? ?? {};
     final dailyJson = json['daily'] as Map<String, dynamic>? ?? {};
 
+    // Parse Hourly (take next 24 hours around current time)
+    final List<HourlyForecastItem> hourlyList = [];
+    final hTimes = (hourlyJson['time'] as List<dynamic>?) ?? [];
+    final hTemps = (hourlyJson['temperature_2m'] as List<dynamic>?) ?? [];
+    final hCodes = (hourlyJson['weather_code'] as List<dynamic>?) ?? [];
+    final hProbs = (hourlyJson['precipitation_probability'] as List<dynamic>?) ?? [];
+
+    final now = DateTime.now();
+    int startIndex = 0;
+    for (int i = 0; i < hTimes.length; i++) {
+      final parsed = DateTime.tryParse(hTimes[i].toString());
+      if (parsed != null && parsed.isAfter(now.subtract(const Duration(hours: 1)))) {
+        startIndex = i;
+        break;
+      }
+    }
+
+    final endIndex = (startIndex + 24).clamp(0, hTimes.length);
+    for (int i = startIndex; i < endIndex; i++) {
+      final time = DateTime.tryParse(hTimes[i].toString()) ?? now.add(Duration(hours: i - startIndex));
+      hourlyList.add(HourlyForecastItem(
+        time: time,
+        temperature: i < hTemps.length ? (hTemps[i] as num).toDouble() : 0.0,
+        weatherCode: i < hCodes.length ? (hCodes[i] as num).toInt() : 0,
+        precipitationProbability: i < hProbs.length ? (hProbs[i] as num).toInt() : 0,
+      ));
+    }
+
+    // Parse Daily
     final List<DailyForecastItem> dailyList = [];
     final times = (dailyJson['time'] as List<dynamic>?) ?? [];
     final weatherCodes = (dailyJson['weather_code'] as List<dynamic>?) ?? [];
@@ -89,6 +135,7 @@ class WeatherData {
       longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
       timezone: json['timezone'] as String? ?? 'UTC',
       current: CurrentWeather.fromJson(currentJson),
+      hourlyForecast: hourlyList,
       dailyForecast: dailyList,
     );
   }
