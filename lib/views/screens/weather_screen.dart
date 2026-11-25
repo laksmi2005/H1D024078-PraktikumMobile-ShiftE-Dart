@@ -190,15 +190,30 @@ class _WeatherScreenState extends State<WeatherScreen> {
                             avatar: Icon(
                               Icons.favorite_rounded,
                               size: 15,
-                              color: isSelected ? Colors.redAccent : Colors.grey[500],
+                              color: isSelected ? Colors.white : Colors.redAccent,
                             ),
                             label: Text(
                               fav.name,
                               style: TextStyle(
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                                fontSize: 13,
+                                // Always explicit color so it's readable in both themes
+                                color: isSelected
+                                    ? Colors.white
+                                    : (isDark ? Colors.grey[200] : Colors.grey[800]),
                               ),
                             ),
                             selected: isSelected,
+                            selectedColor: Colors.redAccent,
+                            backgroundColor: isDark
+                                ? Colors.grey[800]
+                                : Colors.white,
+                            side: BorderSide(
+                              color: isSelected
+                                  ? Colors.redAccent
+                                  : (isDark ? Colors.grey[600]! : Colors.grey[300]!),
+                              width: 1.2,
+                            ),
                             onSelected: (selected) {
                               if (selected && !isSelected) {
                                 vm.selectLocation(fav, saveToHistory: false);
